@@ -4,55 +4,60 @@ let answersState = Array(8).fill(false);
 
 // Default Data for 5 rounds
 let allRoundsData = [
+    // Soal 1: Alasan begadang
     [
-        { text: "DEMOGORGON", score: 40 },
-        { text: "ELEVEN", score: 30 },
-        { text: "HAWKINS", score: 20 },
-        { text: "VECNA", score: 10 },
-        { text: "DUSTIN", score: 0 },
-        { text: "LUCAS", score: 0 },
-        { text: "MAX", score: 0 },
-        { text: "HOPPER", score: 0 }
+        { text: "LAPRAK", score: 35 },
+        { text: "NONGKRONG", score: 25 },
+        { text: "PROYEK AKHIR", score: 15 },
+        { text: "SCROLL MEDSOS", score: 9 },
+        { text: "PUSH RANK", score: 6 },
+        { text: "NONTON FILM", score: 5 },
+        { text: "NGODING", score: 3 },
+        { text: "OVERTHINKING", score: 2 }
     ],
+    // Soal 2: Barang haram kalau ketinggalan
     [
-        { text: "UPSIDE DOWN", score: 35 },
-        { text: "MIND FLAYER", score: 25 },
-        { text: "EGGOS", score: 15 },
-        { text: "ARGYLE", score: 10 },
-        { text: "BINGO", score: 5 },
-        { text: "SYNCHRONICITY", score: 0 },
-        { text: "TUNNEL", score: 0 },
-        { text: "GATE", score: 0 }
+        { text: "LAPTOP", score: 40 },
+        { text: "CHARGER", score: 20 },
+        { text: "KTM", score: 15 },
+        { text: "PARFUM", score: 10 },
+        { text: "JAS LAB", score: 6 },
+        { text: "HP", score: 4 },
+        { text: "DOMPET", score: 3 },
+        { text: "EARPHONE", score: 2 }
     ],
+    // Soal 3: Tempat makan andalan
     [
-        { text: "CHRISTMAS", score: 30 },
-        { text: "LIGHTS", score: 25 },
-        { text: "SNOW", score: 20 },
-        { text: "SANTA", score: 15 },
-        { text: "PRESENTS", score: 5 },
-        { text: "FAMILY", score: 0 },
-        { text: "TREE", score: 0 },
-        { text: "CAROLING", score: 0 }
+        { text: "AYAM MALAYSIA", score: 32 },
+        { text: "CIBUS", score: 28 },
+        { text: "FOODLAB", score: 15 },
+        { text: "PENS MART", score: 8 },
+        { text: "AYAM BAWANG PUTIH", score: 7 },
+        { text: "KANTIN PPNS", score: 5 },
+        { text: "BAKSO", score: 3 },
+        { text: "TUNA SUWIR", score: 2 }
     ],
+    // Soal 4: Hal paling menakutkan
     [
-        { text: "SCIENCE", score: 35 },
-        { text: "LAB", score: 25 },
-        { text: "EXPERIMENT", score: 20 },
-        { text: "TEST SUBJECT", score: 10 },
-        { text: "PSYCHIC", score: 5 },
-        { text: "PORTAL", score: 0 },
-        { text: "RESEARCH", score: 0 },
-        { text: "FACILITY", score: 0 }
+        { text: "TELAT", score: 30 },
+        { text: "LAPTOP RUSAK", score: 25 },
+        { text: "DEADLINE MEPET", score: 18 },
+        { text: "DOSEN KILLER", score: 12 },
+        { text: "SEMESTER ANTARA", score: 7 },
+        { text: "LUPA SAVE", score: 4 },
+        { text: "WIFI DOWN", score: 3 },
+        { text: "SALAH KELAS", score: 1 }
     ],
+    // Soal 5: Kegiatan di Lab selain praktikum
     [
-        { text: "FRIENDS", score: 40 },
-        { text: "GROUP", score: 25 },
-        { text: "TEAM", score: 15 },
-        { text: "SQUAD", score: 10 },
-        { text: "CREW", score: 5 },
-        { text: "PARTY", score: 0 },
-        { text: "BAND", score: 0 },
-        { text: "CLIQUE", score: 0 }
+        { text: "NUMPANG WIFI", score: 30 },
+        { text: "TIDUR", score: 25 },
+        { text: "MABAR", score: 15 },
+        { text: "TUGAS LAIN", score: 12 },
+        { text: "MAKAN", score: 8 },
+        { text: "NGADEM", score: 6 },
+        { text: "GOSIP", score: 3 },
+        { text: "CHARGE HP", score: 1 }
     ]
 ];
 
