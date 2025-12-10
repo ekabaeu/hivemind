@@ -4,99 +4,14 @@
     <meta charset="UTF-8">
     <title>BOARD - STRANGER THINGS</title>
     <link rel="stylesheet" href="stranger-things.css">
-    <style>
-        /* Additional styles specific to board */
-        body {
-            background-color: #000;
-            background-image:
-                radial-gradient(circle at 50% 50%, #200000 0%, #000000 80%);
-            height: 100vh; margin: 0; overflow: hidden;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-        }
-
-        /* HEADER / JUDUL */
-        .header-title {
-            font-family: 'Creepster', cursive;
-            font-size: 60px;
-            color: transparent;
-            -webkit-text-stroke: 2px #ff0000;
-            text-shadow: 0 0 20px #ff0000, 0 0 40px #aa0000;
-            margin-bottom: 20px; z-index: 2;
-            letter-spacing: 5px;
-        }
-
-        /* KARTU JAWABAN */
-        .card {
-            height: 90px;
-            position: relative; overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-
-        /* Sisi Depan (Angka Tertutup) */
-        .card-front {
-            position: absolute; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center;
-            color: #444; font-size: 40px; background: #080000;
-            transition: top 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            top: 0; z-index: 2;
-            text-shadow: 0 0 5px red;
-        }
-        /* Lingkaran Angka */
-        .num-circle {
-            border: 2px solid #550000; border-radius: 50%; width: 50px; height: 50px;
-            display: flex; justify-content: center; align-items: center;
-            background: #110000; color: #ff0000;
-            box-shadow: 0 0 10px #ff0000;
-        }
-
-        /* Sisi Belakang (Jawaban Terbuka) */
-        .card-back {
-            position: absolute; width: 100%; height: 100%;
-            display: flex; justify-content: space-between; align-items: center;
-            /* Gradient Merah Stranger Things */
-            background: linear-gradient(90deg, #990000 0%, #ff0000 50%, #990000 100%);
-            color: #000; padding: 0 30px;
-            box-sizing: border-box; font-size: 28px;
-            top: 0; z-index: 1;
-            font-weight: 800;
-            text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
-        }
-
-        .card.is-open .card-front { top: -100%; }
-        .card.is-open { border-color: #ffcc00; box-shadow: 0 0 30px #ff0000; }
-
-        /* POP-UP SALAH (VECNA STYLE) */
-        .wrong-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(50, 0, 0, 0.6); display: none;
-            justify-content: center; align-items: center; z-index: 99;
-            backdrop-filter: blur(5px);
-        }
-        .big-x {
-            font-size: 500px; color: #ff0000; font-family: 'Creepster', cursive;
-            text-shadow: 0 0 50px #ff0000, 0 0 100px black;
-            animation: glitch 0.2s infinite;
-        }
-
-        @keyframes glitch {
-            0% { transform: skew(0deg); }
-            20% { transform: skew(-10deg); filter: hue-rotate(90deg); }
-            40% { transform: skew(10deg); }
-            60% { transform: skew(-5deg); filter: hue-rotate(-90deg); }
-            80% { transform: skew(5deg); }
-            100% { transform: skew(0deg); }
-        }
-    </style>
 </head>
-<body>
+<body class="board-body">
 
     <div class="spores"></div>
     <div class="header-title">FAMILY FEUD: HAWKINS</div>
     
     <!-- Round Indicator -->
-    <div id="roundIndicator" style="color: #ffcc00; font-size: 24px; margin-bottom: 10px; text-align: center; font-weight: bold;">
+    <div id="roundIndicator" class="round-indicator">
         SOAL 1
     </div>
 
@@ -107,82 +22,6 @@
         <div class="big-x">X</div>
     </div>
 
-    <script>
-        const gameChannel = new BroadcastChannel('stranger_channel');
-        const board = document.getElementById('board');
-        const roundIndicator = document.getElementById('roundIndicator');
-        
-        // Data Default (Akan ditimpa oleh Admin)
-        let localData = Array(8).fill({ text: "...", score: 0 });
-        let currentRound = 0;
-
-        // Generate 8 Slot Kosong
-        function renderBoard() {
-            board.innerHTML = '';
-            localData.forEach((data, i) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.id = `card-${i}`;
-                card.innerHTML = `
-                    <div class="card-front"><div class="num-circle">${i+1}</div></div>
-                    <div class="card-back">
-                        <span>${data.text}</span>
-                        <span>${data.score}</span>
-                    </div>
-                `;
-                board.appendChild(card);
-            });
-        }
-        
-        renderBoard(); // Render awal
-
-        // Audio Effects (Gunakan sound horror/retro)
-        // Note: Browser memblokir audio otomatis tanpa interaksi user.
-        // Klik di halaman board sekali sebelum main agar suara jalan.
-        const soundWrong = new Audio('https://www.myinstants.com/media/sounds/family-feud-buzzer.mp3');
-        const soundCorrect = new Audio('https://www.myinstants.com/media/sounds/family-feud-good-answer.mp3');
-        
-        // Preload audio files
-        [soundWrong, soundCorrect].forEach(sound => {
-            sound.preload = 'auto';
-        });
-
-        // Listener Sinyal dari Admin
-        gameChannel.onmessage = (event) => {
-            const msg = event.data;
-
-            switch (msg.type) {
-                case 'UPDATE_DATA':
-                    // Update teks jawaban secara real-time
-                    localData = msg.data;
-                    currentRound = msg.round || 0;
-                    roundIndicator.textContent = `SOAL ${currentRound + 1}`;
-                    renderBoard(); // Render ulang dengan teks baru
-                    // Reset all cards to closed state when switching rounds
-                    document.querySelectorAll('.card').forEach(c => c.classList.remove('is-open'));
-                    break;
-                case 'TOGGLE':
-                    const card = document.getElementById(`card-${msg.index}`);
-                    if (msg.isOpen) {
-                        card.classList.add('is-open');
-                        soundCorrect.currentTime = 0;
-                        soundCorrect.play();
-                    } else {
-                        card.classList.remove('is-open');
-                    }
-                    break;
-                case 'WRONG_SOUND':
-                    const overlay = document.getElementById('wrongOverlay');
-                    overlay.style.display = 'flex';
-                    soundWrong.currentTime = 0;
-                    soundWrong.play();
-                    setTimeout(() => { overlay.style.display = 'none'; }, 2000);
-                    break;
-                case 'RESET':
-                    document.querySelectorAll('.card').forEach(c => c.classList.remove('is-open'));
-                    break;
-            }
-        };
-    </script>
+    <script src="board.js"></script>
 </body>
 </html>
