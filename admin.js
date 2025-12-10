@@ -3,12 +3,21 @@ let currentRound = 0;
 let answersState = Array(8).fill(false);
 
 // Default Data for 5 rounds
-let allRoundsData = [
+// Daftar soal untuk setiap round
+const questions = [
+    "Apa alasan utama mahasiswa TRM begadang sampai pagi?",
+    "Barang apa yang 'Haram' kalau sampai ketinggalan saat berangkat kuliah?",
+    "Sebutkan tempat makan atau area cari makan andalan mahasiswa TRM!",
+    "Hal apa yang paling bikin mahasiswa TRM panik atau takut?",
+    "Kegiatan apa yang sering dilakukan di dalam Lab selain praktikum?"
+];
+
+const defaultRoundsData = [
     // Soal 1: Alasan begadang
     [
-        { text: "LAPRAK", score: 35 },
+        { text: "PROYEK AKHIR", score: 35 },
         { text: "NONGKRONG", score: 25 },
-        { text: "PROYEK AKHIR", score: 15 },
+        { text: "LAPRAK", score: 15 },
         { text: "SCROLL MEDSOS", score: 9 },
         { text: "PUSH RANK", score: 6 },
         { text: "NONTON FILM", score: 5 },
@@ -62,13 +71,8 @@ let allRoundsData = [
 ];
 
 // Initialize current round data
+let allRoundsData = JSON.parse(localStorage.getItem('savedAllRoundsData')) || [...defaultRoundsData];
 let gameData = [...allRoundsData[currentRound]];
-
-// Cek LocalStorage agar data tidak hilang saat refresh
-if(localStorage.getItem('savedAllRoundsData')) {
-    allRoundsData = JSON.parse(localStorage.getItem('savedAllRoundsData'));
-    gameData = [...allRoundsData[currentRound]];
-}
 
 // --- INISIALISASI ---
 const grid = document.getElementById('buttonGrid');
@@ -86,7 +90,7 @@ function renderRound() {
         // 1. Buat Tombol Kontrol
         const btn = document.createElement('button');
         btn.className = 'btn-toggle';
-        btn.innerText = `Buka ${i + 1}`;
+        btn.textContent = `Buka ${i + 1}`;
         btn.id = `btn-${i}`;
         btn.onclick = () => toggleAnswer(i);
         grid.appendChild(btn);
@@ -94,16 +98,35 @@ function renderRound() {
         // 2. Buat Input Editor
         const row = document.createElement('div');
         row.className = 'editor-row';
-        row.innerHTML = `
-            <span style="padding:8px; width:20px">${i+1}.</span>
-            <input type="text" id="txt-${i}" value="${data.text}" placeholder="Jawaban">
-            <input type="number" id="scr-${i}" value="${data.score}" placeholder="Skor">
-        `;
+        
+        const span = document.createElement('span');
+        span.style.padding = '8px';
+        span.style.width = '20px';
+        span.textContent = `${i+1}.`;
+        
+        const textInput = document.createElement('input');
+        textInput.type = 'text';
+        textInput.id = `txt-${i}`;
+        textInput.value = data.text;
+        textInput.placeholder = 'Jawaban';
+        
+        const scoreInput = document.createElement('input');
+        scoreInput.type = 'number';
+        scoreInput.id = `scr-${i}`;
+        scoreInput.value = data.score;
+        scoreInput.placeholder = 'Skor';
+        
+        row.appendChild(span);
+        row.appendChild(textInput);
+        row.appendChild(scoreInput);
         inputList.appendChild(row);
     });
     
     // Update round selector
     roundSelector.value = currentRound;
+    
+    // Update question display
+    document.getElementById('questionDisplay').textContent = questions[currentRound];
 }
 
 renderRound();
@@ -112,7 +135,7 @@ renderRound();
 
 function switchRound() {
     // Save current round data
-    allRoundsData[currentRound] = [...gameData];
+    saveToLocalStorage();
     
     // Switch to new round
     currentRound = parseInt(roundSelector.value);
@@ -125,22 +148,28 @@ function switchRound() {
     pushDataToBoard();
 }
 
+// Helper function to save data to localStorage
+function saveToLocalStorage() {
+    allRoundsData[currentRound] = [...gameData];
+    localStorage.setItem('savedAllRoundsData', JSON.stringify(allRoundsData));
+}
+
 function pushDataToBoard() {
-    // Ambil data dari input
+    // Ambil data dari input dan update gameData
     gameData.forEach((data, i) => {
         data.text = document.getElementById(`txt-${i}`).value.toUpperCase();
         data.score = document.getElementById(`scr-${i}`).value;
     });
     
     // Simpan ke browser
-    allRoundsData[currentRound] = [...gameData];
-    localStorage.setItem('savedAllRoundsData', JSON.stringify(allRoundsData));
+    saveToLocalStorage();
 
     // Kirim ke Board
     gameChannel.postMessage({
         type: 'UPDATE_DATA',
         data: gameData,
-        round: currentRound
+        round: currentRound,
+        question: questions[currentRound]
     });
     
     // Reset state tombol karena data berubah
@@ -154,10 +183,10 @@ function toggleAnswer(index) {
     
     if (answersState[index]) {
         btn.classList.add('opened');
-        btn.innerText = `Tutup ${index + 1}`;
+        btn.textContent = `Tutup ${index + 1}`;
     } else {
         btn.classList.remove('opened');
-        btn.innerText = `Buka ${index + 1}`;
+        btn.textContent = `Buka ${index + 1}`;
     }
 
     gameChannel.postMessage({
@@ -179,9 +208,10 @@ function resetGame() {
 
 function resetGameUIOnly() {
     answersState.fill(false);
-    document.querySelectorAll('.btn-toggle').forEach((btn, i) => {
+    const buttons = document.querySelectorAll('.btn-toggle');
+    buttons.forEach((btn, i) => {
         btn.classList.remove('opened');
-        btn.innerText = `Buka ${i + 1}`;
+        btn.textContent = `Buka ${i + 1}`;
     });
 }
 

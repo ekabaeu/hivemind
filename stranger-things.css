@@ -98,6 +98,18 @@ h2 {
   font-weight: bold;
 }
 
+/* Question Display */
+.question-display {
+  color: var(--color-gold);
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-family: var(--font-header);
+  text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+  letter-spacing: 1px;
+}
+
 /* Card Breathing Animation */
 @keyframes breathing {
   0% {
