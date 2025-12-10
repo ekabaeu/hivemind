@@ -1,0 +1,137 @@
+/* Stranger Things Horror Theme CSS */
+
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Roboto:wght@700&display=swap');
+
+/* Horror Theme Colors */
+:root {
+  --color-black: #000;
+  --color-dark-red: #500;
+  --color-blood-red: #900;
+  --color-neon-red: #f00;
+  --color-dim-red: #400;
+  --color-creepster: 'Creepster', cursive;
+  --color-roboto: 'Roboto', sans-serif;
+}
+
+/* Base Styles */
+* {
+  font-family: var(--color-roboto);
+}
+
+body {
+  background-color: var(--color-black);
+  color: #ccc;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Header Styles */
+h1, h2, h3 {
+  font-family: var(--color-creepster);
+  color: var(--color-neon-red);
+  text-shadow: 0 0 10px var(--color-neon-red);
+  letter-spacing: 2px;
+}
+
+/* Card Breathing Animation */
+@keyframes breathing {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  }
+}
+
+.card {
+  background: var(--color-black);
+  border: 2px solid var(--color-dark-red);
+  animation: breathing 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--color-neon-red);
+  box-shadow: 0 0 25px var(--color-neon-red);
+}
+
+/* Upside Down Dust Particles */
+.spores {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('http://www.script-tutorials.com/demos/360/images/twinkling.png') repeat top center;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+  animation: move-twink-back 200s linear infinite;
+}
+
+@keyframes move-twink-back {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -10000px 5000px;
+  }
+}
+
+/* Button Styles */
+button {
+  background: var(--color-dim-red);
+  color: #fff;
+  border: 2px solid var(--color-dark-red);
+  padding: 15px;
+  cursor: pointer;
+  font-family: var(--color-roboto);
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  border-color: var(--color-neon-red);
+  color: var(--color-neon-red);
+  box-shadow: 0 0 15px var(--color-neon-red);
+}
+
+/* Opened Button State */
+.btn-toggle.opened {
+  background: var(--color-neon-red);
+  color: var(--color-black);
+  box-shadow: 0 0 15px var(--color-neon-red);
+  border-color: var(--color-neon-red);
+}
+
+/* Input Styles */
+input[type="text"], input[type="number"] {
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  padding: 8px;
+  font-family: var(--color-roboto);
+}
+
+/* Container Styles */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.board-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 85%;
+  max-width: 1200px;
+  z-index: 2;
+  position: relative;
+}
